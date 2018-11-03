@@ -1201,7 +1201,10 @@ class RenderEditable extends RenderBox {
   @override
   void paint(PaintingContext context, Offset offset) {
     _layoutText(constraints.maxWidth);
-    if (_hasVisualOverflow)
+
+    // We need to check [_paintOffset] here because during animation, the text
+    // may be rendered outside the visible region even if the text fits.
+    if (_hasVisualOverflow || _paintOffset != Offset.zero)
       context.pushClipRect(needsCompositing, offset, Offset.zero & size, _paintContents);
     else
       _paintContents(context, offset);
